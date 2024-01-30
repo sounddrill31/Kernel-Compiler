@@ -23,7 +23,7 @@ red='\033[0;31m'
 nocol='\033[0m'
 
 #TC_DIR="/home/karthik558/Workspace/"
-#MPATH="$TC_DIR/CLANG-13/bin/:$PATH"
+MPATH="CLANG-13/bin/:$PATH"
 rm -f out/arch/arm64/boot/Image.gz-dtb
 make O=out $DEFCONFIG_PATH
 PATH="$MPATH" make -j16 O=out \
