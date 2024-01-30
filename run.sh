@@ -1,11 +1,13 @@
 #Basic Script to build kernel
 
 #!/bin/bash
-cd RyZeN
+#cd RyZeN
 export ARCH=arm64
 export SUBARCH=arm64
-export KBUILD_BUILD_HOST="NOT-GAMING-KERNEL"
-export KBUILD_BUILD_USER="K A R T H I K"
+export KBUILD_BUILD_HOST="sounddrill"
+export KBUILD_BUILD_USER="sounddrill31"
+export DEFCONFIG_PATH="vendor/violet-perf_defconfig"
+export DEVICENAME="violet"
 MAKE="./makeparallel"
 
 # Set Date
@@ -20,10 +22,10 @@ yellow='\033[0;33m'
 red='\033[0;31m'
 nocol='\033[0m'
 
-TC_DIR="/home/karthik558/Workspace/"
-MPATH="$TC_DIR/CLANG-13/bin/:$PATH"
+#TC_DIR="/home/karthik558/Workspace/"
+#MPATH="$TC_DIR/CLANG-13/bin/:$PATH"
 rm -f out/arch/arm64/boot/Image.gz-dtb
-make O=out vendor/violet-perf_defconfig
+make O=out $DEFCONFIG_PATH
 PATH="$MPATH" make -j16 O=out \
     NM=llvm-nm \
     OBJCOPY=llvm-objcopy \
@@ -37,23 +39,23 @@ PATH="$MPATH" make -j16 O=out \
         2>&1 | tee error.log
 
 # Copying Image.gz-dtb to anykernel
-cp out/arch/arm64/boot/Image.gz-dtb /home/karthik558/Workspace/Anykernel
-cd /home/karthik558/Workspace/Anykernel
+cp out/arch/arm64/boot/Image.gz-dtb Anykernel/
+cd Anykernel
 
 # Ziping Kernel using Anykernel
 if [ -f "Image.gz-dtb" ]; then
-    zip -r9 RyZeN-violet-S-$DATE.zip * -x .git README.md *placeholder
-cp /home/karthik558/Workspace/Anykernel/RyZeN-violet-S-$DATE.zip /home/karthik558/Workspace/
-rm /home/karthik558/Workspace/Anykernel/RyZeN-violet-S-$DATE.zip
-rm /home/karthik558/Workspace/Anykernel/Image.gz-dtb
+    zip -r9 sounddrill-$DEVICENAME-S-$DATE.zip * -x .git README.md *placeholder
+cp Anykernel/sounddrill-$DEVICENAME-S-$DATE.zip .
+rm Anykernel/sounddrill-$DEVICENAME-S-$DATE.zip
+rm Anykernel/Image.gz-dtb
 
 # Signzip using zipsigner
-cd /home/karthik558/Workspace/
+#cd /home/karthik558/Workspace/
 # curl -sLo zipsigner-3.0.jar https://github.com/Magisk-Modules-Repo/zipsigner/raw/master/bin/zipsigner-3.0-dexed.jar
-java -jar zipsigner-3.0.jar RyZeN-violet-S-$DATE.zip RyZeN-violet-S-$DATE-signed.zip
+java -jar zipsigner-3.0.jar sounddrill-$DEVICENAME-S-$DATE.zip sounddrill-$DEVICENAME-S-$DATE-signed.zip
 
 # Remove unsigned build
-rm RyZeN-violet-S-$DATE.zip
+rm sounddrill-$DEVICENAME-S-$DATE.zip
 
 # Build Completed
 BUILD_END=$(date +"%s")
